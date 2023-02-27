@@ -16,6 +16,7 @@ class UserDaoTest {
 
     private EntityManagerFactory factory = Persistence.createEntityManagerFactory("socialnetwork");
     private UserDao uDao = new UserDao(factory);
+    private PostDao pDao = new PostDao(factory);
 
     @Test
     public void testSaveUserAndFind() {
@@ -35,7 +36,11 @@ class UserDaoTest {
     public void testDeleteUserById() {
         User user = new User("superman12", "abcd", "superman12@supermail.com", Category.FREE,
                 new PersonalData("Gipsz Jakab", LocalDate.parse("1975-05-15"), "Budapest"));
+
         uDao.saveUser(user);
+        pDao.savePost(user.getId(), new Post(Content.TEXT));
+        pDao.savePost(user.getId(), new Post(Content.TEXT));
+        pDao.savePost(user.getId(), new Post(Content.TEXT));
 
         uDao.deleteUserById(user.getId());
 
