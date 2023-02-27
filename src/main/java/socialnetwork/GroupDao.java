@@ -1,5 +1,6 @@
 package socialnetwork;
 
+import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.util.List;
@@ -57,6 +58,33 @@ public class GroupDao {
             user.getGroups().remove(group);
             group.getUsers().remove(user);
             manager.getTransaction().commit();
+        } finally {
+            manager.close();
+        }
+    }
+
+    public List<Group> listGroupsWithNamedGraph(String graphName) {
+        EntityManager manager = factory.createEntityManager();
+        try {
+            return manager.createQuery("SELECT g FROM Group g",
+                    Group.class)
+                    .setHint("javax.persistence.fetchgraph", manager.getEntityGraph(graphName))
+                    .getResultList();
+        } finally {
+            manager.close();
+        }
+    }
+
+    public Group findGroupByDynamicGraph(long groupId) {
+        EntityManager manager = factory.createEntityManager();
+        try {
+            EntityGraph<Group> graph = manager.createEntityGraph(Group.class);
+            graph.addSubgraph("users").addAttributeNodes("friends");
+            return manager.createQuery("SELECT g FROM Group g WHERE g.id = :groupId",
+                    Group.class)
+                    .setParameter("groupId", groupId)
+                    .setHint("javax.persistence.loadgraph", graph)
+                    .getSingleResult();
         } finally {
             manager.close();
         }

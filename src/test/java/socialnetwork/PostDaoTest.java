@@ -22,7 +22,7 @@ class PostDaoTest {
     @Test
     public void testSavePostToUser() {
         TimeMachine.set(LocalDateTime.parse("2023-02-25T15:00"));
-        User user = new User("superman12", "abcd", Category.FREE);
+        User user = new User("superman12", "abcd", "superman12@supermail.com", Category.FREE);
         uDao.saveUser(user);
 
         TimeMachine.set(LocalDateTime.parse("2023-02-26T15:30"));
@@ -44,7 +44,7 @@ class PostDaoTest {
     @Test
     public void testListPostsOfUser() {
         TimeMachine.set(LocalDateTime.parse("2023-02-25T15:00"));
-        User user = new User("superman12", "abcd", Category.FREE);
+        User user = new User("superman12", "abcd", "superman12@supermail.com", Category.FREE);
         uDao.saveUser(user);
 
         TimeMachine.set(LocalDateTime.parse("2023-02-26T15:30"));
@@ -66,8 +66,8 @@ class PostDaoTest {
 
     @Test
     public void testDeleteAllPostsByUserId() {
-        User user = new User("superman12", "abcd", Category.FREE);
-        User user2 = new User("supergirl21", "1234", Category.VIP);
+        User user = new User("superman12", "abcd", "superman12@supermail.com", Category.FREE);
+        User user2 = new User("supergirl21", "1234", "supergirl21@gmail.com", Category.VIP);
         uDao.saveUser(user);
         uDao.saveUser(user2);
 
@@ -89,9 +89,9 @@ class PostDaoTest {
 
     @Test
     public void testListPostDataByUserId() {
-        User user = new User("superman12", "abcd", Category.FREE);
-        User user2 = new User("supergirl21", "1234", Category.VIP);
-        User user3 = new User("kamehame93", "admin", Category.FREE);
+        User user = new User("superman12", "abcd", "superman12@supermail.com", Category.FREE);
+        User user2 = new User("supergirl21", "1234", "supergirl21@gmail.com", Category.VIP);
+        User user3 = new User("kamehame93", "admin", "gokusan93@outlook.com", Category.FREE);
         uDao.saveUser(user);
         uDao.saveUser(user2);
         uDao.saveUser(user3);

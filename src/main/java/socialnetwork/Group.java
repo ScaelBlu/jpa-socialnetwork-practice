@@ -4,6 +4,14 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+@NamedEntityGraph(name = "groups-users-posts",
+    attributeNodes =
+        @NamedAttributeNode(value = "users", subgraph = "posts"),
+    subgraphs =
+        @NamedSubgraph(name = "posts",
+            attributeNodes = @NamedAttributeNode("posts")
+    )
+)
 @Entity
 @Table(name = "groups")
 public class Group {

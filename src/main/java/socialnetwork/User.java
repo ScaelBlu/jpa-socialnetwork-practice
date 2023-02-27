@@ -26,6 +26,9 @@ public class User {
 
     private String password;
 
+    @Column(name = "email_address")
+    private String emailAddress;
+
     @Enumerated(EnumType.STRING)
     private Category category;
 
@@ -56,14 +59,15 @@ public class User {
     public User() {
     }
 
-    public User(String userName, String password, Category category) {
+    public User(String userName, String password, String emailAddress, Category category) {
         this.userName = userName;
         this.password = password;
+        this.emailAddress = emailAddress;
         this.category = category;
     }
 
-    public User(String userName, String password, Category category, PersonalData personalData) {
-        this(userName, password, category);
+    public User(String userName, String password, String emailAddress, Category category, PersonalData personalData) {
+        this(userName, password, emailAddress, category);
         this.personalData = personalData;
     }
 
