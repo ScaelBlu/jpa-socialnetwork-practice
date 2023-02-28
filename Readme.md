@@ -115,8 +115,8 @@ Az új felhasználóknak nincsenek posztjaik, ezért kaszkádolt mentést felesl
 `void savePostToUser(long userId, Post post)` metódust, ami a felhasználó referenciáját használva elmenti az adott bejegyzést az adatbázisba!
 
 Mivel a posztok bírnak a külső kulccsal, ezért egy felhasználó törlésére tett kísérlet `ConstraintViolationException` kivételt eredményezne, mert utána
-azok nem létező felhasználóra mutatnának. Ezért állíts be kaszkádolt törlést, hogy ezt elkerüld! Kaszkádolt törlés során nincs szükség betölteni a példányhoz
-kapcsolódó többi példányt, ezért használhatsz referenciát is, vagy egy egyszerű `DELETE` query-t.
+azok nem létező felhasználóra mutatnának. Ezért állíts be kaszkádolt törlést, hogy ezt elkerüld! A kaszkádolt törléshez nincs szükség betölteni a példányhoz
+kapcsolódó objektumokat, ha visszakeresed a `find()` metódussal, vagy referenciával törlöd.
 
 Legyen egy `List<Post> listAllPostsOfUser(long userId)` metódus, ami kilistázza időrendi sorrendben egy felhasználó azonosítója alapján a bejegyzéseit!
 Próbáld meg úgy implementálni, hogy nem töltöd be a felhasználót a perzisztencia kontextusba!
