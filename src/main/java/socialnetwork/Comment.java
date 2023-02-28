@@ -21,7 +21,7 @@ public class Comment {
     @Column(name = "commented_at")
     private LocalDateTime commentDate;
 
-    @Column(name = "comment_text", length = 8191)
+    @Column(name = "comment_text", columnDefinition = "TEXT")
     private String commentText;
 
     @ManyToOne

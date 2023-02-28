@@ -25,8 +25,8 @@ A `socialnetwork` csomagban dolgozz!
 
 ## User entitás
 
-Az entitások az objektum-relációs leképezés (ORM) alapvető egységei a JPA-ban. A JPA képes automatikus sémagenerálásra, ami azt jelenti, hogy az
-alkalmazás indulásakor az entitások alapján legenerálja és lefuttatja azokat az SQL parancsokat, amik létrehozzák a táblákat. Ennek mikéntjét
+>Az entitások az objektum-relációs leképezés (ORM) alapvető egységei a JPA-ban. A JPA képes automatikus sémagenerálásra, ami azt jelenti, hogy az
+alkalmazás indulásakor az entitások alapján legenerálja és lefuttatja azokat az SQL utasításokat, amik létrehozzák a táblákat. A táblákat
 annotációkkal lehet konfigurálni. Egy entitáshoz szükség van az osztályra tett `@Entity` annotációra, egy üres konstruktorra, és elsődleges kulcsra,
 ami akár több attribútumból álló összetett kulcs is lehet.
 
@@ -38,8 +38,12 @@ konstruktorokat, valamint getter és setter metódusokat!
 
 ### Azonosító-generálás
 
-Az azonosítók automatikus kiosztása többféle stratégia szerint történhet. Ezeket használhatod az alapértelmezett beállításokkal is, de lehetőséged
-van konfigurálni is egyes generátorokat.
+>Az azonosítók automatikus kiosztása többféle stratégia szerint történhet. Ezeket használhatod az alapértelmezett beállításokkal is, de lehetőséged
+van konfigurálni is egyes generátorokat. A `GenerationType.TABLE` esetén egy új tábla jön létre, ami egy szekvenciát utánoz. Ilyenkor a keretrendszer
+a táblából kéri le egy `SELECT` utasítással a következő értéket, és frissíti is a táblát. Mivel ez erőforrásigényes, ezért be lehet állítani, hogy
+hány darab azonosítót tároljon el előre a memóriában. Ez a stratégia azoknál az adatbázisoknál is működik, amelyek nem támogatják a szekvenciákat,
+és emiatt a `GenerationType.SEQUENCE` nem használható. A `GenerationType.IDENTITY` stratégia az azonosító kiosztását az adatbázisra bízza, azaz csak
+mentés után kapja meg. Emiatt egymás után hívott `persist()` és `detach()` metódus után az entitás mentésre kerül, míg táblagenerálással nem.
 
 Az azonosítók táblagenerátorral kerüljenek kiosztásra minden további entitás esetén is, egyetlen `id_table` nevű táblában! Ehhez minden entitásban
 állítsd be ugyanúgy a táblagenerátor. A konfiguráció a `@TableGenerator` annotáció elemeivel lehetséges.
@@ -61,7 +65,7 @@ a jelszó módosításhoz! Legyen egy túltöltött változata a kategória mód
 
 ### Személyes adatok
 
-A beágyazható osztályok nem valódi entitások, hanem csak kiegészítenek egy másikat, azaz annak a részét képezik. Ehhez elég az `@Embeddable`
+>A beágyazható osztályok nem valódi entitások, hanem csak kiegészítenek egy másikat, azaz annak a részét képezik. Ehhez elég az `@Embeddable`
 annotációval ellátni őket, és az attribútumait ugyanúgy konfigurálhatod. Fontos, hogy legyen üres konstruktora. Ha az entitásban felveszel egy
 beágyazott osztályt attribútumként, akkor az `@Embedded` annotációval kell ellátni.
 
@@ -79,17 +83,17 @@ egy *singleton*, azaz csak egyetlen példánya lehet.
 
 ## Posztok és kommentek (one-to-many)
 
-Az entitások között kapcsolatokat lehet kialakítani, amelyek egy-, vagy kétirányúak lehetnek. Kétirányú kapcsolatoknál az ún. *owner side* hordozza
+>Az entitások között kapcsolatokat lehet kialakítani, amelyek egy-, vagy kétirányúak lehetnek. Kétirányú kapcsolatoknál az ún. *owner side* hordozza
 a táblák szintjén a külső kulcsot, ami a másik tábla - az *inverse side* - rekordjára mutat. Úgy is mondhatni, hogy az *inverse side* "leképződik" az
 *owner side*-on, amit az annotációk `mappedBy` elemével lehet megadni. Kétirányú *one-to-many* kapcsolat esetén mindig a kollekciót tartalmazó az
 *inverse side*!
-
-Egyirányú kapcsolatoknál nincs értelme oldaliságról beszélni. Egyirányú *one-to-one* kapcsolatoknál mindkét oldal hordoz a másikra mutató kulcsot.
+>
+>Egyirányú kapcsolatoknál nincs értelme oldaliságról beszélni. Egyirányú *one-to-one* kapcsolatoknál mindkét oldal hordoz a másikra mutató kulcsot.
 Egyirányú *one-to-many* kapcsolatoknál kapcsolótáblán keresztül valósul meg az összeköttetés, míg az egyirányú *many-to-many* kapcsolatoknál két
 kapcsolótábla is létrejön egymást tükrözve. Kétirányú *many-to-many* kapcsolatnál egy kapcsolótábla jön létre, és a `mappedBy` határozza meg, hogy
 melyik oldal kulcsa legyen az első oszlopban.
-
-*Many-to-many* kapcsolatot egy entitáson belül is létre lehet hozni (lásd később).
+>
+>*Many-to-many* kapcsolatot egy entitáson belül is létre lehet hozni (lásd később).
 
 A felhasználók bejegyzéseket tudnak közzétenni az oldalon, amik a `Set<Post> posts` halmazba kerülnek. Egy posztnak rendelkeznie kell egy `Long id`
 egyedi azonosítóval, a létrehozás dátumával (`LocalDateTime postDate`), egy enum `Content content` típussal, ami a `TEXT`, `IMAGE`, `VIDEO` példányokkal
@@ -149,19 +153,19 @@ Legyen egy metódus, ami lapozásssal szűri az összes lekért hozzászólást 
 
 #### Az orphanRemoval használata
 
-Az `ophanRemoval` az árván maradt objektumok automatikus törlését jelenti. Ez akkor történhet meg, ha egy gyermek objektumot eltávolítunk egy kollekcióból
+>Az `ophanRemoval` az árván maradt objektumok automatikus törlését jelenti. Ez akkor történhet meg, ha egy gyermek objektumot eltávolítunk egy kollekcióból
 a **kollekció** `remove()` metódusával. Így ha az `orphanRemoval = true` beállítás meg van adva a szülőben, akkor ez a rekordok szintjén is megjelenik anélkül,
 hogy az `EntityManager` `remove()` metódusát használnod kellene. Ez akkor is működik, ha esetleg a gyermek objektum maga is kollekciót tartalmaz. Természetesen
 a külső kulcsok megkötését itt sem lehet megsérteni, ezért azokban is meg kell adni az `orphanRemoval = true` beállítást.
-
-**Vigyázz, a funkció bugos (hybernate-entitymanager 5.6.14.Final)! A `CascadeType.PERSIST` együttes megadása nélkül nem működik.**
+>
+>>**Vigyázz, a funkció bugos (hybernate-entitymanager 5.6.14.Final)! A `CascadeType.PERSIST` együttes megadása nélkül nem működik.**
 
 Írj egy metódust a `PostDao` osztályban egy felhasználó összes bejegyzésének törlésére (`void deleteAllPostsByUserId(long userId)`)! Használd ki az
 `orphanRemoval`-t! Próbáld ki kommentek hozzáadásával is!
 
 #### Projection query
 
-A DTO-k - *Data transfer object* - egyszerű objektumok egyszerű típusokkal, aminek a célja az alkalmazás rétegei között, vagy akár a hálózaton keresztül küldött
+>A DTO-k - *Data transfer object* - egyszerű objektumok egyszerű típusokkal, aminek a célja az alkalmazás rétegei között, vagy akár a hálózaton keresztül küldött
 információk egy egységbe zárása. Utóbbihoz szerializálhatónak kell lennie, ami bájtok vagy karakterek sorozatára történő átalakítást jelent.
 
 Készíts egy egyszerű `PostData` adatátviteli objektumot, ami a posztoló felhasználónevét (`String userName`), egy bejegyzés tartalmát(`Content content`), és
@@ -208,16 +212,16 @@ A `UserDao` osztályban legyen egy `void saveFriendship(long userId1, long userI
 
 ## Fetch és entitásgráfok
 
-A kapcsolatok betöltése vagy `FetchType.EAGER`, vagy `FetchType.LAZY` típusú alapértelmezetten a kapcsolatok oldalától függően. A kettő közti finomhangolást
+>A kapcsolatok betöltése vagy `FetchType.EAGER`, vagy `FetchType.LAZY` típusú alapértelmezetten a kapcsolatok oldalától függően. A kettő közti finomhangolást
 entitásgráfokkal lehet megoldani ahelyett, hogy a fetch-elést a JPQL utasításba égetnéd be. Emellett egy előre megírt gráfot több lekérdezésben is használhatsz.
 Az entitásgráfokat property-k, azaz kulcs-érték párok formájában lehet megadni egy lekérdezés során. Lehetőség van az alapértelmezett betöltést teljesen felülíró
 (`javax.persistence.fetchgraph`), vagy azt kiegészítő (`javax.persistence.loadgraph`) property kulcshoz hozzárendelni egy adott entitásgráfot. Gráfot statikusan,
 az entitásra tett `@NamedEntityGraph` annotációval tudsz deklarálni, vagy programozottan metódusokkal is létrehozhatsz egy konkrét `EntityGraph` példányt. 
-
-Az entitásgráfok node-jai az entitások attribútumai. A kollekció típusú attribútumokat azonban tovább lehet bontani algráfokra, így akár egyetlen `SELECT`
+>
+>Az entitásgráfok node-jai az entitások attribútumai. A kollekció típusú attribútumokat azonban tovább lehet bontani algráfokra, így akár egyetlen `SELECT`
 utasítással kollekciók egész láncolatát kérheted le. Ha statikusan készíted, akkor ezeknek külön nevet is kell adni, míg dinamikusan nincs erre szükség.
-
-Használatuk az `EntityManager` `find()` és `createQuery()` metódusában lehetséges. A `find()` metódus harmadik paraméterként egy olyan `Map<String, Object>` példányt
+>
+>Használatuk az `EntityManager` `find()` és `createQuery()` metódusában lehetséges. A `find()` metódus harmadik paraméterként egy olyan `Map<String, Object>` példányt
 vár, aminek a kulcsa a fentebb említett property kulcs egyike, az értéke pedig maga az `EntityGraph` példány. Egy gráfot az `EntityManager` `createEntityGraph()`
 metódusával lehet példányosítani egy gráf nevét átadva, ha azt már statikusan deklaráltad. A `createQuery()` metódusnál azonban nincs szükséged külön `Map`-re.
 Itt a property-t a `TypedQuery` `setHint(String hintName, Object value)` metódusával tudod beállítani, hasonlóan a paraméterezett lekérdezések paraméteréhez.
