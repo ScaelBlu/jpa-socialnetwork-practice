@@ -14,7 +14,7 @@ public class PostDao {
         this.factory = factory;
     }
 
-    public void savePost(long userId, Post post) {
+    public void savePostToUser(long userId, Post post) {
         EntityManager manager = factory.createEntityManager();
         try {
             manager.getTransaction().begin();

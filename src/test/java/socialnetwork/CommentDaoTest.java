@@ -22,15 +22,15 @@ class CommentDaoTest {
     public void testSaveAndListUserComments() {
         User user = new User("superman12", "abcd", "superman12@supermail.com", Category.FREE);
         User user2 = new User("supergirl21", "1234", "supergirl21@gmail.com", Category.VIP);
-        uDao.saveUser(user);
-        uDao.saveUser(user2);
+
+        uDao.saveUsers(user, user2);
 
         TimeMachine.set(LocalDateTime.parse("2023-02-26T15:30"));
         Post post1 = new Post(Content.TEXT);
-        pDao.savePost(user.getId(), post1);
+        pDao.savePostToUser(user.getId(), post1);
         TimeMachine.set(LocalDateTime.parse("2023-02-28T18:30"));
         Post post2 = new Post(Content.IMAGE);
-        pDao.savePost(user.getId(), post2);
+        pDao.savePostToUser(user.getId(), post2);
 
         TimeMachine.set(LocalDateTime.parse("2023-02-26T15:35"));
         cDao.saveComment(user2.getId(), post1.getId(), new Comment("This is only the beginning of a beautiful friendship"));
@@ -48,17 +48,15 @@ class CommentDaoTest {
         User user2 = new User("supergirl21", "1234", "supergirl21@gmail.com", Category.VIP);
         User user3 = new User("kamehame93", "admin", "gokusan93@outlook.com", Category.FREE);
 
-        uDao.saveUser(user);
-        uDao.saveUser(user2);
-        uDao.saveUser(user3);
+        uDao.saveUsers(user, user2, user3);
 
         Post post1 = new Post(Content.TEXT);
         Post post2 = new Post(Content.IMAGE);
         Post post3 = new Post(Content.VIDEO);
 
-        pDao.savePost(user.getId(), post1);
-        pDao.savePost(user.getId(), post2);
-        pDao.savePost(user2.getId(), post3);
+        pDao.savePostToUser(user.getId(), post1);
+        pDao.savePostToUser(user.getId(), post2);
+        pDao.savePostToUser(user2.getId(), post3);
 
         cDao.saveComment(user2.getId(), post1.getId(), new Comment("This is only the beginning of a beautiful friendship"));
         cDao.saveComment(user.getId(), post1.getId(), new Comment("I hope so :)"));
@@ -80,14 +78,13 @@ class CommentDaoTest {
         User user = new User("superman12", "abcd", "superman12@supermail.com", Category.FREE);
         User user2 = new User("supergirl21", "1234", "supergirl21@gmail.com", Category.VIP);
 
-        uDao.saveUser(user);
-        uDao.saveUser(user2);
+        uDao.saveUsers(user, user2);
 
         Post post1 = new Post(Content.TEXT);
         Post post2 = new Post(Content.IMAGE);
 
-        pDao.savePost(user.getId(), post1);
-        pDao.savePost(user2.getId(), post2);
+        pDao.savePostToUser(user.getId(), post1);
+        pDao.savePostToUser(user2.getId(), post2);
 
         cDao.saveComment(user2.getId(), post1.getId(), new Comment("This is only the beginning of a beautiful friendship"));
         cDao.saveComment(user.getId(), post1.getId(), new Comment("I hope so :)"));

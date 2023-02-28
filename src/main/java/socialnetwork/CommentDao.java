@@ -40,7 +40,7 @@ public class CommentDao {
     public List<Comment> listCommentsUnderPostsByUser(long ownerId, long writerId) {
         EntityManager manager = factory.createEntityManager();
         try {
-            return manager.createQuery("SELECT comment FROM User user JOIN user.posts posts JOIN posts.comments comment WHERE comment.user.id = :writerId AND user.id = :ownerId"
+            return manager.createQuery("SELECT comment FROM User user JOIN user.posts posts JOIN posts.comments comment WHERE comment.user.id = :writerId AND user.id = :ownerId ORDER BY comment.commentDate"
                     ,Comment.class)
                     .setParameter("writerId", writerId)
                     .setParameter("ownerId", ownerId)

@@ -2,15 +2,12 @@ package socialnetwork;
 
 import org.junit.jupiter.api.Test;
 
-import javax.persistence.EntityGraph;
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class GroupDaoTest {
 
@@ -21,24 +18,22 @@ class GroupDaoTest {
 
     @Test
     public void testSaveToGroupAndListMembers() {
-     Group group = new Group("BikerFanatics", "A group for real riders", false);
-     User user = new User("crazybiker49", "bike", "crazybiker49@gmail.com", Category.FREE);
-     User user2 = new User("justbike33", "asdf", "justbike33@gmail.com", Category.FREE);
-     User user3 = new User("rideordie10", "0000", "rideordie10@yahoo.com", Category.PREMIUM);
+        Group group = new Group("BikerFanatics", "A group for real riders", false);
+        gDao.saveGroup(group);
 
-     uDao.saveUser(user);
-     uDao.saveUser(user2);
-     uDao.saveUser(user3);
+        User user = new User("crazybiker49", "bike", "crazybiker49@gmail.com", Category.FREE);
+        User user2 = new User("justbike33", "asdf", "justbike33@gmail.com", Category.FREE);
+        User user3 = new User("rideordie10", "0000", "rideordie10@yahoo.com", Category.PREMIUM);
 
-     gDao.saveGroup(group);
+        uDao.saveUsers(user, user2, user3);
 
-     gDao.addUserToGroup(user.getId(), group.getId());
-     gDao.addUserToGroup(user2.getId(), group.getId());
-     gDao.addUserToGroup(user3.getId(), group.getId());
+        gDao.addUserToGroup(user.getId(), group.getId());
+        gDao.addUserToGroup(user2.getId(), group.getId());
+        gDao.addUserToGroup(user3.getId(), group.getId());
 
-     List<User> members = gDao.listGroupMembers(group.getId());
+        List<User> members = gDao.listGroupMembers(group.getId());
 
-     assertThat(members)
+        assertThat(members)
              .hasSize(3)
              .extracting(User::getUserName)
              .containsExactly("crazybiker49", "justbike33", "rideordie10");
@@ -47,15 +42,13 @@ class GroupDaoTest {
     @Test
     public void testRemoveUserFromGroup() {
         Group group = new Group("BikerFanatics", "A group for real riders", false);
+        gDao.saveGroup(group);
+
         User user = new User("crazybiker49", "bike", "crazybiker49@gmail.com", Category.FREE);
         User user2 = new User("justbike33", "asdf", "justbike33@gmail.com", Category.FREE);
         User user3 = new User("rideordie10", "0000", "rideordie10@yahoo.com", Category.PREMIUM);
 
-        uDao.saveUser(user);
-        uDao.saveUser(user2);
-        uDao.saveUser(user3);
-
-        gDao.saveGroup(group);
+        uDao.saveUsers(user, user2, user3);
 
         gDao.addUserToGroup(user.getId(), group.getId());
         gDao.addUserToGroup(user2.getId(), group.getId());
@@ -72,28 +65,41 @@ class GroupDaoTest {
     }
 
     @Test
+    public void testDeleteGroup() {
+        Group group = new Group("BikerFanatics", "A group for real riders", false);
+        gDao.saveGroup(group);
+
+        User user = new User("crazybiker49", "bike", "crazybiker49@gmail.com", Category.FREE);
+        uDao.saveUsers(user);
+
+        gDao.addUserToGroup(user.getId(), group.getId());
+
+        gDao.deleteGroup(group.getId());
+
+        assertThat(uDao.findUser(user.getId())).isNotNull();
+    }
+
+    @Test
     public void testListGroupsWithNamedGraph() {
         Group group = new Group("BikerFanatics", "A group for real riders", false);
+        gDao.saveGroup(group);
+
         User user = new User("crazybiker49", "bike", "crazybiker49@gmail.com", Category.FREE);
         User user2 = new User("justbike33", "asdf", "justbike33@gmail.com", Category.FREE);
         User user3 = new User("rideordie10", "0000", "rideordie10@yahoo.com", Category.PREMIUM);
 
-        uDao.saveUser(user);
-        uDao.saveUser(user2);
-        uDao.saveUser(user3);
-
-        gDao.saveGroup(group);
+        uDao.saveUsers(user, user2, user3);
 
         gDao.addUserToGroup(user.getId(), group.getId());
         gDao.addUserToGroup(user2.getId(), group.getId());
         gDao.addUserToGroup(user3.getId(), group.getId());
 
-        pDao.savePost(user.getId(), new Post(Content.TEXT));
-        pDao.savePost(user.getId(), new Post(Content.TEXT));
-        pDao.savePost(user.getId(), new Post(Content.TEXT));
-        pDao.savePost(user2.getId(), new Post(Content.IMAGE));
-        pDao.savePost(user2.getId(), new Post(Content.IMAGE));
-        pDao.savePost(user3.getId(), new Post(Content.VIDEO));
+        pDao.savePostToUser(user.getId(), new Post(Content.TEXT));
+        pDao.savePostToUser(user.getId(), new Post(Content.TEXT));
+        pDao.savePostToUser(user.getId(), new Post(Content.TEXT));
+        pDao.savePostToUser(user2.getId(), new Post(Content.IMAGE));
+        pDao.savePostToUser(user2.getId(), new Post(Content.IMAGE));
+        pDao.savePostToUser(user3.getId(), new Post(Content.VIDEO));
 
         List<Group> groups = gDao.listGroupsWithNamedGraph("groups-users-posts");
 
@@ -116,12 +122,7 @@ class GroupDaoTest {
         User user4 = new User("crazybiker49", "bike", "crazybiker49@gmail.com", Category.FREE);
         User user5 = new User("justbike33", "asdf", "justbike33@gmail.com",  Category.FREE);
 
-        uDao.saveUser(user);
-
-        uDao.saveUser(user2);
-        uDao.saveUser(user3);
-        uDao.saveUser(user4);
-        uDao.saveUser(user5);
+        uDao.saveUsers(user, user2, user3, user4, user5);
 
         gDao.addUserToGroup(user.getId(), group.getId());
         gDao.addUserToGroup(user2.getId(), group.getId());

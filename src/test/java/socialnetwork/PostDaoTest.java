@@ -23,14 +23,14 @@ class PostDaoTest {
     public void testSavePostToUser() {
         TimeMachine.set(LocalDateTime.parse("2023-02-25T15:00"));
         User user = new User("superman12", "abcd", "superman12@supermail.com", Category.FREE);
-        uDao.saveUser(user);
+        uDao.saveUsers(user);
 
         TimeMachine.set(LocalDateTime.parse("2023-02-26T15:30"));
-        pDao.savePost(user.getId(), new Post(Content.TEXT));
+        pDao.savePostToUser(user.getId(), new Post(Content.TEXT));
         TimeMachine.set(LocalDateTime.parse("2023-02-28T18:30"));
-        pDao.savePost(user.getId(), new Post(Content.IMAGE));
+        pDao.savePostToUser(user.getId(), new Post(Content.IMAGE));
         TimeMachine.set(LocalDateTime.parse("2023-02-26T10:20"));
-        pDao.savePost(user.getId(), new Post(Content.VIDEO));
+        pDao.savePostToUser(user.getId(), new Post(Content.VIDEO));
 
         List<Post> posts = pDao.listAllPostsOfUser(user.getId());
 
@@ -45,14 +45,14 @@ class PostDaoTest {
     public void testListPostsOfUser() {
         TimeMachine.set(LocalDateTime.parse("2023-02-25T15:00"));
         User user = new User("superman12", "abcd", "superman12@supermail.com", Category.FREE);
-        uDao.saveUser(user);
+        uDao.saveUsers(user);
 
         TimeMachine.set(LocalDateTime.parse("2023-02-26T15:30"));
-        pDao.savePost(user.getId(), new Post(Content.TEXT));
+        pDao.savePostToUser(user.getId(), new Post(Content.TEXT));
         TimeMachine.set(LocalDateTime.parse("2023-02-28T18:30"));
-        pDao.savePost(user.getId(), new Post(Content.IMAGE));
+        pDao.savePostToUser(user.getId(), new Post(Content.IMAGE));
         TimeMachine.set(LocalDateTime.parse("2023-02-26T10:20"));
-        pDao.savePost(user.getId(), new Post(Content.VIDEO));
+        pDao.savePostToUser(user.getId(), new Post(Content.VIDEO));
 
         List<Post> posts = pDao.listPostsOfUser(user.getId(),
                 p -> p.getPostDate().isBefore(LocalDateTime.parse("2023-02-27T00:00")));
@@ -68,14 +68,13 @@ class PostDaoTest {
     public void testDeleteAllPostsByUserId() {
         User user = new User("superman12", "abcd", "superman12@supermail.com", Category.FREE);
         User user2 = new User("supergirl21", "1234", "supergirl21@gmail.com", Category.VIP);
-        uDao.saveUser(user);
-        uDao.saveUser(user2);
+        uDao.saveUsers(user, user2);
 
         Post post1 = new Post(Content.TEXT);
         Post post2 = new Post(Content.IMAGE);
 
-        pDao.savePost(user.getId(), post1);
-        pDao.savePost(user.getId(), post2);
+        pDao.savePostToUser(user.getId(), post1);
+        pDao.savePostToUser(user.getId(), post2);
 
         cDao.saveComment(user2.getId(), post1.getId(), new Comment("This is only the beginning of a beautiful friendship"));
         cDao.saveComment(user.getId(), post1.getId(), new Comment("I hope so :)"));
@@ -92,17 +91,15 @@ class PostDaoTest {
         User user = new User("superman12", "abcd", "superman12@supermail.com", Category.FREE);
         User user2 = new User("supergirl21", "1234", "supergirl21@gmail.com", Category.VIP);
         User user3 = new User("kamehame93", "admin", "gokusan93@outlook.com", Category.FREE);
-        uDao.saveUser(user);
-        uDao.saveUser(user2);
-        uDao.saveUser(user3);
+        uDao.saveUsers(user, user2, user3);
 
         Post post1 = new Post(Content.TEXT);
         Post post2 = new Post(Content.IMAGE);
         Post post3 = new Post(Content.VIDEO);
 
-        pDao.savePost(user.getId(), post1);
-        pDao.savePost(user.getId(), post2);
-        pDao.savePost(user.getId(), post3);
+        pDao.savePostToUser(user.getId(), post1);
+        pDao.savePostToUser(user.getId(), post2);
+        pDao.savePostToUser(user.getId(), post3);
 
         cDao.saveComment(user2.getId(), post1.getId(), new Comment("This is only the beginning of a beautiful friendship"));
         cDao.saveComment(user.getId(), post1.getId(), new Comment("I hope so :)"));

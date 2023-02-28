@@ -2,8 +2,8 @@ package socialnetwork;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import java.util.Arrays;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 public class UserDao {
 
@@ -13,18 +13,19 @@ public class UserDao {
         this.factory = factory;
     }
 
-    public void saveUser(User user) {
+    public void saveUsers(User user, User... users) {
         EntityManager manager = factory.createEntityManager();
         try {
             manager.getTransaction().begin();
             manager.persist(user);
+            Arrays.stream(users).forEach(manager::persist);
             manager.getTransaction().commit();
         } finally {
             manager.close();
         }
     }
 
-    public void deleteUserById(long userId) {
+    public void deleteUser(long userId) {
         EntityManager manager = factory.createEntityManager();
         try {
             manager.getTransaction().begin();
@@ -36,7 +37,7 @@ public class UserDao {
         }
     }
 
-    public User findUserById(long id) {
+    public User findUser(long id) {
         EntityManager manager = factory.createEntityManager();
         try {
             return manager.find(User.class, id);
@@ -45,33 +46,29 @@ public class UserDao {
         }
     }
 
-    public boolean updateUser(long id, String newPassword) {
+    public void updateUser(long id, String newPassword) {
         EntityManager manager = factory.createEntityManager();
         try {
             manager.getTransaction().begin();
             User user = manager.getReference(User.class, id);
-            if(user.getPassword().equals(newPassword)) {
-                return false;
-            }
+
             user.setPassword(newPassword);
             manager.getTransaction().commit();
-            return true;
+
         } finally {
             manager.close();
         }
     }
 
-    public boolean updateUser(long id, Category newCategory) {
+    public void updateUser(long id, Category newCategory) {
         EntityManager manager = factory.createEntityManager();
         try {
             manager.getTransaction().begin();
             User user = manager.getReference(User.class, id);
-            if(user.getCategory().equals(newCategory)) {
-                return false;
-            }
+
             user.setCategory(newCategory);
             manager.getTransaction().commit();
-            return true;
+
         } finally {
             manager.close();
         }

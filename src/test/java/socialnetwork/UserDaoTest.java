@@ -22,9 +22,9 @@ class UserDaoTest {
     public void testSaveUserAndFind() {
         TimeMachine.set(LocalDateTime.of(2023, 2, 23, 15, 0));
         User user = new User("superman12", "abcd", "superman12@supermail.com", Category.FREE);
-        uDao.saveUser(user);
+        uDao.saveUsers(user);
 
-        User found = uDao.findUserById(user.getId());
+        User found = uDao.findUser(user.getId());
 
         assertNotNull(user.getId());
         assertEquals("superman12", found.getUserName());
@@ -37,14 +37,14 @@ class UserDaoTest {
         User user = new User("superman12", "abcd", "superman12@supermail.com", Category.FREE,
                 new PersonalData("Gipsz Jakab", LocalDate.parse("1975-05-15"), "Budapest"));
 
-        uDao.saveUser(user);
-        pDao.savePost(user.getId(), new Post(Content.TEXT));
-        pDao.savePost(user.getId(), new Post(Content.TEXT));
-        pDao.savePost(user.getId(), new Post(Content.TEXT));
+        uDao.saveUsers(user);
+        pDao.savePostToUser(user.getId(), new Post(Content.TEXT));
+        pDao.savePostToUser(user.getId(), new Post(Content.TEXT));
+        pDao.savePostToUser(user.getId(), new Post(Content.TEXT));
 
-        uDao.deleteUserById(user.getId());
+        uDao.deleteUser(user.getId());
 
-        User found = uDao.findUserById(user.getId());
+        User found = uDao.findUser(user.getId());
 
         assertNull(found);
     }
@@ -52,13 +52,11 @@ class UserDaoTest {
     @Test
     public void testUpdateUserPassword() {
         User user = new User("superman12", "abcd", "superman12@supermail.com", Category.FREE);
+        uDao.saveUsers(user);
 
-        uDao.saveUser(user);
+        uDao.updateUser(user.getId(), "dcba");
 
-        assertFalse(uDao.updateUser(user.getId(), "abcd"));
-        assertTrue(uDao.updateUser(user.getId(), "dcba"));
-
-        User found = uDao.findUserById(user.getId());
+        User found = uDao.findUser(user.getId());
 
         assertEquals("dcba", found.getPassword());
     }
@@ -66,13 +64,11 @@ class UserDaoTest {
     @Test
     public void testUpdateUserCategory() {
         User user = new User("superman12", "abcd", "superman12@supermail.com", Category.FREE);
+        uDao.saveUsers(user);
 
-        uDao.saveUser(user);
+        uDao.updateUser(user.getId(), Category.PREMIUM);
 
-        assertFalse(uDao.updateUser(user.getId(), Category.FREE));
-        assertTrue(uDao.updateUser(user.getId(), Category.PREMIUM));
-
-        User found = uDao.findUserById(user.getId());
+        User found = uDao.findUser(user.getId());
 
         assertEquals(Category.PREMIUM, found.getCategory());
     }
@@ -82,9 +78,9 @@ class UserDaoTest {
         User user = new User("superman12", "abcd", "superman12@supermail.com", Category.FREE,
                 new PersonalData("Gipsz Jakab", LocalDate.parse("1975-05-15"), "Budapest"));
 
-        uDao.saveUser(user);
+        uDao.saveUsers(user);
 
-        User found = uDao.findUserById(user.getId());
+        User found = uDao.findUser(user.getId());
 
         assertThat(found)
                 .extracting(User::getPersonalData)
@@ -100,11 +96,7 @@ class UserDaoTest {
         User user4 = new User("crazybiker49", "bike", "crazybiker49@gmail.com", Category.PREMIUM);
         User user5 = new User("justbike33", "asdf", "justbike33@gmail.com", Category.FREE);
 
-        uDao.saveUser(user);
-        uDao.saveUser(user2);
-        uDao.saveUser(user3);
-        uDao.saveUser(user4);
-        uDao.saveUser(user5);
+        uDao.saveUsers(user, user2, user3, user4, user5);
 
         uDao.saveFriendship(user.getId(), user2.getId());
         uDao.saveFriendship(user.getId(), user3.getId());
@@ -127,11 +119,7 @@ class UserDaoTest {
         User user4 = new User("crazybiker49", "bike", "justbike33@gmail.com", Category.PREMIUM);
         User user5 = new User("justbike33", "asdf", "rideordie10@yahoo.com", Category.FREE);
 
-        uDao.saveUser(user);
-        uDao.saveUser(user2);
-        uDao.saveUser(user3);
-        uDao.saveUser(user4);
-        uDao.saveUser(user5);
+        uDao.saveUsers(user, user2, user3, user4, user5);
 
         uDao.saveFriendship(user.getId(), user2.getId());
         uDao.saveFriendship(user.getId(), user3.getId());

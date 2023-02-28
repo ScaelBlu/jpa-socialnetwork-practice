@@ -4,6 +4,7 @@ import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.util.List;
+import java.util.Set;
 
 public class GroupDao {
 
@@ -57,6 +58,18 @@ public class GroupDao {
             Group group = manager.getReference(Group.class, groupId);
             user.getGroups().remove(group);
             group.getUsers().remove(user);
+            manager.getTransaction().commit();
+        } finally {
+            manager.close();
+        }
+    }
+
+    public void deleteGroup(long groupId) {
+        EntityManager manager = factory.createEntityManager();
+        try {
+            manager.getTransaction().begin();
+            Group group = manager.getReference(Group.class, groupId);
+            group.getUsers().clear();
             manager.getTransaction().commit();
         } finally {
             manager.close();

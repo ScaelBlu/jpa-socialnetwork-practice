@@ -26,7 +26,7 @@ public class User {
 
     private String password;
 
-    @Column(name = "email_address")
+    @Column(name = "email_address", length = 100)
     private String emailAddress;
 
     @Enumerated(EnumType.STRING)
