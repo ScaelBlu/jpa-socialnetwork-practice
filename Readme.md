@@ -57,6 +57,13 @@ Add meg a generátor nevét a generált érték beállításához (`@GeneratedVa
 
 ### Alapvető műveletek
 
+>Amikor egy mentett entitáspéldányon valamilyen változást szeretnél végrehajtani, akkor megteheted azt anélkül is, hogy lekérnéd az adatait egy
+`SELECT`-tel. Ilyenkor egyszerűen egy referenciát vagy proxy objektumot kell használni, ami nem más, mint egy adatok nélküli objektum, ami csak
+rámutat az adatbázis rekordjára. Amikor meghívod az `EntityManager` `getReference()` metódusát, akkor a kapott proxy egyedül csak a megadott
+azonosítót tartalmazza. Még azt sem ellenőrzi a JPA, hogy az adott azonosító valódi rekordra mutat-e. Amíg a proxy benne van a perzisztencia
+kontextusban, addig az adatok lekérhetők, és ehhez elég egy gettert használni. Kollekciók esetén viszont vigyázz, mert a getterrel kapott kollekció
+ilyenkor még mindig csak a proxy része, és az elemei nincsenek betöltve egészen addig, amíg nincs szükség a tartalmára (pl. az `isEmpty()` hívásakor).
+
 Hozd létre a `UserDao` osztályt, ami az alapvető CRUD műveleteket tartalmazza! Legyen benne egy `void saveUser(User user)`* metódus mentéshez,
 egy `void deleteUser(long userId)` törléshez, egy `User findUser(long id)` olvasáshoz, és egy `void updateUser(long id, String newPassword)`
 a jelszó módosításhoz! Legyen egy túltöltött változata a kategória módosításához is! Ahol lehet, használj referenciákat a műveletek során!
