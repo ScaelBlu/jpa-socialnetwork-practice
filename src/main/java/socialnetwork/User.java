@@ -2,10 +2,13 @@ package socialnetwork;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+@NamedEntityGraph(name = "user-friends-friends",
+    attributeNodes = @NamedAttributeNode(value = "friends", subgraph = "friendsSub"),
+    subgraphs = @NamedSubgraph(name = "friendsSub", attributeNodes = @NamedAttributeNode("friends"))
+)
 @Entity
 @Table(name = "users")
 @SecondaryTable(name = "personal_data", pkJoinColumns = @PrimaryKeyJoinColumn(name = "user_id"))

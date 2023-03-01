@@ -6,9 +6,9 @@ import java.util.Set;
 
 @NamedEntityGraph(name = "groups-users-posts",
     attributeNodes =
-        @NamedAttributeNode(value = "users", subgraph = "posts"),
+        @NamedAttributeNode(value = "users", subgraph = "postsSub"),
     subgraphs =
-        @NamedSubgraph(name = "posts",
+        @NamedSubgraph(name = "postsSub",
             attributeNodes = @NamedAttributeNode("posts")
     )
 )

@@ -1,9 +1,11 @@
 package socialnetwork;
 
+import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class UserDao {
 
@@ -29,7 +31,12 @@ public class UserDao {
         EntityManager manager = factory.createEntityManager();
         try {
             manager.getTransaction().begin();
-            User user = manager.getReference(User.class, userId);
+            EntityGraph graph = manager.createEntityGraph("user-friends-friends");
+            User user = manager.find(User.class, userId, Map.of("javax.persistence.loadgraph", graph));
+/*            User user = manager.createQuery("SELECT u FROM User u LEFT JOIN FETCH u.friends friends LEFT JOIN FETCH friends.friends WHERE u.id = ?1",
+                    User.class)
+                    .setParameter(1, userId)
+                    .getSingleResult();*/
             user.getFriends().forEach(u -> u.getFriends().remove(user));
             manager.remove(user);
             manager.getTransaction().commit();

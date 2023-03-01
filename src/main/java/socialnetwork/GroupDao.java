@@ -4,7 +4,7 @@ import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 public class GroupDao {
 
@@ -73,11 +73,18 @@ public class GroupDao {
             manager.close();
         }
     }
+
     public void deleteGroup(long groupId) {
         EntityManager manager = factory.createEntityManager();
         try {
             manager.getTransaction().begin();
-            Group group = manager.getReference(Group.class, groupId);
+            EntityGraph<Group> graph = manager.createEntityGraph(Group.class);
+            graph.addSubgraph("users").addAttributeNodes("groups");
+            Group group = manager.find(Group.class, groupId, Map.of("javax.persistence.loadgraph", graph));
+/*            Group group = manager.createQuery("SELECT g FROM Group g LEFT JOIN FETCH g.users users LEFT JOIN FETCH users.groups WHERE g.id = ?1",
+                    Group.class)
+                    .setParameter(1, groupId)
+                    .getSingleResult();*/
             group.getUsers().forEach(u -> u.getGroups().remove(group));
             manager.remove(group);
             manager.getTransaction().commit();

@@ -210,7 +210,7 @@ akkor előtte fontos, hogy az *owner side*-on megszűnjenek vele a kapcsolatok. 
 hogy előtte a rámutató függőségeket megszüntesd (tehát ha törlöd az egyiket, akkor minden másik kollekciójából el kell azt távolítani).
 
 Ha törölni akarnak egy csoportot, az nem járhat együtt a felhasználók törlésével, ezért kaszkádolt törlést ne használj! Írj egy `void deleteGroup(long groupId)`
-metódust, ami törli a csoportot! Próbálj meg úgy törölni egy felhasználót, hogy az egy csoport tagja!
+metódust, ami törli a csoportot! Csak egy `SELECT` kérés menjen ki, tehát ne használj referenciát! Próbálj meg úgy törölni egy felhasználót is, hogy az egy csoport tagja!
 
 ## Szociális háló (many-to-many)
 
@@ -224,7 +224,8 @@ létre a `void addFriend(User user)` metódust, amivel két felhasználót egym�
 A `UserDao` osztályban legyen egy `void saveFriendship(long userId1, long userId2)`, egy `List<User> listFriendsOfUser(long userId)`, és egy
 `void removeFriendship(long userId1, long userId2)` metódus az ismerősök mentésére, egy felhasználó ismerőseinek listázására, és egy kapcsolat törlésére!
 
-Fontos, hogy úgy is lehessen felhasználót törölni, ha annak ismerősei vannak. Alakítsd át a `void deleteUser(long userId)` metódust úgy, hogy ez lehetséges legyen!
+Fontos, hogy akkor is lehessen felhasználót törölni, ha annak ismerősei vannak. Alakítsd át a `void deleteUser(long userId)` metódust úgy, hogy ez lehetséges legyen!
+Egy `SELECT` menjen ki, azaz fetch-eld az ismerősöket!
 
 ## Fetch és entitásgráfok
 
@@ -249,7 +250,11 @@ Készíts a `GroupDao` osztályban egy `List<Group> listGroupsWithNamedGraph(Str
 gráfot a `Group` entitáshoz, amivel egy csoportba tartozó felhasználókat és azok bejegyzéseit lehet betölteni!
 
 Próbáld ki programozottan is! Hozz létre egy `Group findGroupWithDynamicGraph(long groupId)` metódust, ami id alapján visszaad egy csoportot a tagokkal és azok ismerőseivel
-együtt betöltve! 
+együtt betöltve!
+
+Alakítsd át a korábbi `void deleteGroup(long groupId)` metódust úgy, hogy entitásgráfot használjon fetch-eléshez!
+
+Próbáld ki statikus entitásgráffal a `void deleteUser(long userId)`-t!
 
 ## Service réteg kialakítása
 
@@ -259,4 +264,4 @@ együtt betöltve!
 * PREMIUM, VIP funkciók
 * felhasználói jogok, keresések
 * Mockito
-* nemtom
+* stb.
