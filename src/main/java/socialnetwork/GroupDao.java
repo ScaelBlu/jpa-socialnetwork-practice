@@ -64,12 +64,22 @@ public class GroupDao {
         }
     }
 
+    public List<Group> listAllGroups() {
+        EntityManager manager = factory.createEntityManager();
+        try {
+            return manager.createQuery("SELECT g FROM Group g", Group.class)
+                    .getResultList();
+        } finally {
+            manager.close();
+        }
+    }
     public void deleteGroup(long groupId) {
         EntityManager manager = factory.createEntityManager();
         try {
             manager.getTransaction().begin();
             Group group = manager.getReference(Group.class, groupId);
-            group.getUsers().clear();
+            group.getUsers().forEach(u -> u.getGroups().remove(group));
+            manager.remove(group);
             manager.getTransaction().commit();
         } finally {
             manager.close();

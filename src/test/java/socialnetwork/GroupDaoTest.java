@@ -76,6 +76,7 @@ class GroupDaoTest {
 
         gDao.deleteGroup(group.getId());
 
+        assertThat(gDao.listAllGroups()).hasSize(0);
         assertThat(uDao.findUser(user.getId())).isNotNull();
     }
 

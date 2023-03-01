@@ -17,6 +17,7 @@ class UserDaoTest {
     private EntityManagerFactory factory = Persistence.createEntityManagerFactory("socialnetwork");
     private UserDao uDao = new UserDao(factory);
     private PostDao pDao = new PostDao(factory);
+    private GroupDao gDao = new GroupDao(factory);
 
     @Test
     public void testSaveUserAndFind() {
@@ -125,7 +126,7 @@ class UserDaoTest {
         uDao.saveFriendship(user.getId(), user3.getId());
         uDao.saveFriendship(user.getId(), user4.getId());
         uDao.saveFriendship(user2.getId(), user3.getId());
-        //örihari
+
         uDao.removeFriendship(user.getId(), user2.getId());
 
         List<User> friends = uDao.listFriendsOfUser(user.getId());
@@ -134,5 +135,48 @@ class UserDaoTest {
                 .hasSize(2)
                 .extracting(User::getUserName)
                 .containsOnly("kamehame93", "crazybiker49");
+    }
+
+    @Test
+    public void testDeleteUserWithinGroup() {
+        Group group = new Group("BikerFanatics", "A group for real riders", false);
+        gDao.saveGroup(group);
+
+        User user = new User("superman12", "abcd", "superman12@supermail.com", Category.FREE);
+        User user2 = new User("supergirl21", "1234", "supergirl21@gmail.com", Category.VIP);
+
+        uDao.saveUsers(user, user2);
+
+        gDao.addUserToGroup(user.getId(), group.getId());
+        gDao.addUserToGroup(user2.getId(), group.getId());
+
+        uDao.deleteUser(user.getId());
+
+        List<User> members = gDao.listGroupMembers(group.getId());
+        User found = uDao.findUser(user.getId());
+
+        assertNull(found);
+        assertThat(members)
+                .hasSize(1)
+                .extracting(User::getUserName)
+                .containsOnly("supergirl21");
+    }
+
+    @Test
+    public void testDeleteUserHavingFriends() {
+        User user = new User("superman12", "abcd", "superman12@supermail.com", Category.FREE);
+        User user2 = new User("supergirl21", "1234", "supergirl21@gmail.com", Category.VIP);
+        User user3 = new User("kamehame93", "admin", "gokusan93@outlook.com", Category.FREE);
+
+        uDao.saveUsers(user, user2, user3);
+
+        uDao.saveFriendship(user.getId(), user2.getId());
+        uDao.saveFriendship(user.getId(), user3.getId());
+        uDao.saveFriendship(user2.getId(), user3.getId());
+
+        uDao.deleteUser(user.getId());
+
+        assertNull(uDao.findUser(user.getId()));
+        assertThat(uDao.listFriendsOfUser(user2.getId())).hasSize(1);
     }
 }

@@ -30,6 +30,7 @@ public class UserDao {
         try {
             manager.getTransaction().begin();
             User user = manager.getReference(User.class, userId);
+            user.getFriends().forEach(u -> u.getFriends().remove(user));
             manager.remove(user);
             manager.getTransaction().commit();
         } finally {

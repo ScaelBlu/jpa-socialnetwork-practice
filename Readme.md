@@ -98,7 +98,7 @@ a táblák szintjén a külső kulcsot, ami a másik tábla - az *inverse side* 
 >Egyirányú kapcsolatoknál nincs értelme oldaliságról beszélni. Egyirányú *one-to-one* kapcsolatoknál mindkét oldal hordoz a másikra mutató kulcsot.
 Egyirányú *one-to-many* kapcsolatoknál kapcsolótáblán keresztül valósul meg az összeköttetés, míg az egyirányú *many-to-many* kapcsolatoknál két
 kapcsolótábla is létrejön egymást tükrözve. Kétirányú *many-to-many* kapcsolatnál egy kapcsolótábla jön létre, és a `mappedBy` határozza meg, hogy
-melyik oldal kulcsa legyen az első oszlopban.
+melyik oldal kulcsa legyen az első oszlopban, illetve a törlés irányát is (lásd később).
 >
 >*Many-to-many* kapcsolatot egy entitáson belül is létre lehet hozni (lásd később).
 
@@ -202,8 +202,15 @@ metódusa hozza létre!
 
 Készítsd el a `GroupDao` osztályban a `void saveGroup(Group group)`, a `void addUserToGroup(long userId, long groupId)`, és a `List<User> listGroupMembers(long groupId)`
 nevű metódusokat! Arra az esetre is írj egyet, ha egy felhasználó ki akar lépni egy csoportból (`void removeUserFromGroup(long userId, long groupId)`)!
+Legyen egy egyszerű `List<Group> listAllGroups()` metódus is teszteléshez!
 
-Ha törölni akarnak egy csoportot, az nem járhat együtt a felhasználók törlésével. Írj egy `void deleteGroup(long groupId)` metódust!
+>Amikor egy kétirányú *many-to-many* kapcsolat egyik tagját törölni szeretnéd, akkor fontos az entitás oldalisága. Amikor az *owner side* példányát akarod törölni
+(pl. egy felhasználót), akkor azt nem köti a másik oldal kulcsa. Azonban fordítva ez nem igaz: ha az *inverse side* példányát akarod törölni (pl. egy csoportot),
+akkor előtte fontos, hogy az *owner side*-on megszűnjenek vele a kapcsolatok. Amikor egyirányú *many-to-many* kapcsolatból törölsz, akkor bármelyiket törlöd, fontos,
+hogy előtte a rámutató függőségeket megszüntesd (tehát ha törlöd az egyiket, akkor minden másik kollekciójából el kell azt távolítani).
+
+Ha törölni akarnak egy csoportot, az nem járhat együtt a felhasználók törlésével, ezért kaszkádolt törlést ne használj! Írj egy `void deleteGroup(long groupId)`
+metódust, ami törli a csoportot! Próbálj meg úgy törölni egy felhasználót, hogy az egy csoport tagja!
 
 ## Szociális háló (many-to-many)
 
@@ -216,6 +223,8 @@ létre a `void addFriend(User user)` metódust, amivel két felhasználót egym�
 
 A `UserDao` osztályban legyen egy `void saveFriendship(long userId1, long userId2)`, egy `List<User> listFriendsOfUser(long userId)`, és egy
 `void removeFriendship(long userId1, long userId2)` metódus az ismerősök mentésére, egy felhasználó ismerőseinek listázására, és egy kapcsolat törlésére!
+
+Fontos, hogy úgy is lehessen felhasználót törölni, ha annak ismerősei vannak. Alakítsd át a `void deleteUser(long userId)` metódust úgy, hogy ez lehetséges legyen!
 
 ## Fetch és entitásgráfok
 
