@@ -20,8 +20,8 @@ class CommentDaoTest {
 
     @Test
     public void testSaveAndListUserComments() {
-        User user = new User("superman12", "abcd", "superman12@supermail.com", Category.FREE);
-        User user2 = new User("supergirl21", "1234", "supergirl21@gmail.com", Category.VIP);
+        User user = new User("superman12", "abcd", "superman12@supermail.com");
+        User user2 = new User("supergirl21", "1234", "supergirl21@gmail.com");
 
         uDao.saveUsers(user, user2);
 
@@ -44,9 +44,9 @@ class CommentDaoTest {
 
     @Test
     public void testListCommentsUnderPostsByUser() {
-        User user = new User("superman12", "abcd", "superman12@supermail.com", Category.FREE);
-        User user2 = new User("supergirl21", "1234", "supergirl21@gmail.com", Category.VIP);
-        User user3 = new User("kamehame93", "admin", "gokusan93@outlook.com", Category.FREE);
+        User user = new User("superman12", "abcd", "superman12@supermail.com");
+        User user2 = new User("supergirl21", "1234", "supergirl21@gmail.com");
+        User user3 = new User("kamehame93", "admin", "gokusan93@outlook.com");
 
         uDao.saveUsers(user, user2, user3);
 
@@ -75,8 +75,8 @@ class CommentDaoTest {
 
     @Test
     public void testListCommentsWithPaging() {
-        User user = new User("superman12", "abcd", "superman12@supermail.com", Category.FREE);
-        User user2 = new User("supergirl21", "1234", "supergirl21@gmail.com", Category.VIP);
+        User user = new User("superman12", "abcd", "superman12@supermail.com");
+        User user2 = new User("supergirl21", "1234", "supergirl21@gmail.com");
 
         uDao.saveUsers(user, user2);
 

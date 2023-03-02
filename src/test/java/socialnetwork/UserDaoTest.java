@@ -22,7 +22,7 @@ class UserDaoTest {
     @Test
     public void testSaveUserAndFind() {
         TimeMachine.set(LocalDateTime.of(2023, 2, 23, 15, 0));
-        User user = new User("superman12", "abcd", "superman12@supermail.com", Category.FREE);
+        User user = new User("superman12", "abcd", "superman12@supermail.com");
         uDao.saveUsers(user);
 
         User found = uDao.findUser(user.getId());
@@ -35,7 +35,7 @@ class UserDaoTest {
 
     @Test
     public void testDeleteUserById() {
-        User user = new User("superman12", "abcd", "superman12@supermail.com", Category.FREE,
+        User user = new User("superman12", "abcd", "superman12@supermail.com",
                 new PersonalData("Gipsz Jakab", LocalDate.parse("1975-05-15"), "Budapest"));
 
         uDao.saveUsers(user);
@@ -52,7 +52,7 @@ class UserDaoTest {
 
     @Test
     public void testUpdateUserPassword() {
-        User user = new User("superman12", "abcd", "superman12@supermail.com", Category.FREE);
+        User user = new User("superman12", "abcd", "superman12@supermail.com");
         uDao.saveUsers(user);
 
         uDao.updateUser(user.getId(), "dcba");
@@ -64,7 +64,7 @@ class UserDaoTest {
 
     @Test
     public void testUpdateUserCategory() {
-        User user = new User("superman12", "abcd", "superman12@supermail.com", Category.FREE);
+        User user = new User("superman12", "abcd", "superman12@supermail.com");
         uDao.saveUsers(user);
 
         uDao.updateUser(user.getId(), Category.PREMIUM);
@@ -76,7 +76,7 @@ class UserDaoTest {
 
     @Test
     public void testSaveUserWithPersonalData() {
-        User user = new User("superman12", "abcd", "superman12@supermail.com", Category.FREE,
+        User user = new User("superman12", "abcd", "superman12@supermail.com",
                 new PersonalData("Gipsz Jakab", LocalDate.parse("1975-05-15"), "Budapest"));
 
         uDao.saveUsers(user);
@@ -91,11 +91,11 @@ class UserDaoTest {
 
     @Test
     public void testSaveFriendshipAndList() {
-        User user = new User("superman12", "abcd", "superman12@supermail.com", Category.FREE);
-        User user2 = new User("supergirl21", "1234", "supergirl21@gmail.com", Category.VIP);
-        User user3 = new User("kamehame93", "admin", "gokusan93@outlook.com", Category.FREE);
-        User user4 = new User("crazybiker49", "bike", "crazybiker49@gmail.com", Category.PREMIUM);
-        User user5 = new User("justbike33", "asdf", "justbike33@gmail.com", Category.FREE);
+        User user = new User("superman12", "abcd", "superman12@supermail.com");
+        User user2 = new User("supergirl21", "1234", "supergirl21@gmail.com");
+        User user3 = new User("kamehame93", "admin", "gokusan93@outlook.com");
+        User user4 = new User("crazybiker49", "bike", "crazybiker49@gmail.com");
+        User user5 = new User("justbike33", "asdf", "justbike33@gmail.com");
 
         uDao.saveUsers(user, user2, user3, user4, user5);
 
@@ -114,11 +114,11 @@ class UserDaoTest {
 
     @Test
     public void testRemoveFriendship() {
-        User user = new User("superman12", "abcd", "superman12@supermail.com", Category.FREE);
-        User user2 = new User("supergirl21", "1234", "supergirl21@gmail.com", Category.VIP);
-        User user3 = new User("kamehame93", "admin", "gokusan93@outlook.com", Category.FREE);
-        User user4 = new User("crazybiker49", "bike", "justbike33@gmail.com", Category.PREMIUM);
-        User user5 = new User("justbike33", "asdf", "rideordie10@yahoo.com", Category.FREE);
+        User user = new User("superman12", "abcd", "superman12@supermail.com");
+        User user2 = new User("supergirl21", "1234", "supergirl21@gmail.com");
+        User user3 = new User("kamehame93", "admin", "gokusan93@outlook.com");
+        User user4 = new User("crazybiker49", "bike", "justbike33@gmail.com");
+        User user5 = new User("justbike33", "asdf", "rideordie10@yahoo.com");
 
         uDao.saveUsers(user, user2, user3, user4, user5);
 
@@ -142,8 +142,8 @@ class UserDaoTest {
         Group group = new Group("BikerFanatics", "A group for real riders", false);
         gDao.saveGroup(group);
 
-        User user = new User("superman12", "abcd", "superman12@supermail.com", Category.FREE);
-        User user2 = new User("supergirl21", "1234", "supergirl21@gmail.com", Category.VIP);
+        User user = new User("superman12", "abcd", "superman12@supermail.com");
+        User user2 = new User("supergirl21", "1234", "supergirl21@gmail.com");
 
         uDao.saveUsers(user, user2);
 
@@ -164,9 +164,9 @@ class UserDaoTest {
 
     @Test
     public void testDeleteUserHavingFriends() {
-        User user = new User("superman12", "abcd", "superman12@supermail.com", Category.FREE);
-        User user2 = new User("supergirl21", "1234", "supergirl21@gmail.com", Category.VIP);
-        User user3 = new User("kamehame93", "admin", "gokusan93@outlook.com", Category.FREE);
+        User user = new User("superman12", "abcd", "superman12@supermail.com");
+        User user2 = new User("supergirl21", "1234", "supergirl21@gmail.com");
+        User user3 = new User("kamehame93", "admin", "gokusan93@outlook.com");
 
         uDao.saveUsers(user, user2, user3);
 

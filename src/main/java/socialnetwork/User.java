@@ -62,15 +62,15 @@ public class User {
     public User() {
     }
 
-    public User(String userName, String password, String emailAddress, Category category) {
+    public User(String userName, String password, String emailAddress) {
         this.userName = userName;
         this.password = password;
         this.emailAddress = emailAddress;
-        this.category = category;
+        this.category = Category.FREE;
     }
 
-    public User(String userName, String password, String emailAddress, Category category, PersonalData personalData) {
-        this(userName, password, emailAddress, category);
+    public User(String userName, String password, String emailAddress, PersonalData personalData) {
+        this(userName, password, emailAddress);
         this.personalData = personalData;
     }
 
