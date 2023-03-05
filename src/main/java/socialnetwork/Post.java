@@ -30,7 +30,7 @@ public class Post {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(targetEntity = Comment.class, mappedBy = "post", cascade =  CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(targetEntity = Comment.class, mappedBy = "post", cascade =  CascadeType.REMOVE)
     private Set<Comment> comments = new HashSet<>();
 
     public Post() {

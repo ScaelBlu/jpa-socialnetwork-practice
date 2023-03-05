@@ -163,7 +163,7 @@ Legyen egy metódus, ami lapozásssal szűri az összes lekért hozzászólást 
 >Az `ophanRemoval` az árván maradt objektumok automatikus törlését jelenti. Ez akkor történhet meg, ha egy gyermek objektumot eltávolítunk egy kollekcióból
 a **kollekció** `remove()` metódusával. Így ha az `orphanRemoval = true` beállítás meg van adva a szülőben, akkor ez a rekordok szintjén is megjelenik anélkül,
 hogy az `EntityManager` `remove()` metódusát használnod kellene. Ez akkor is működik, ha esetleg a gyermek objektum maga is kollekciót tartalmaz. Természetesen
-a külső kulcsok megkötését itt sem lehet megsérteni, ezért azokban is meg kell adni az `orphanRemoval = true` beállítást.
+a külső kulcsok megkötését itt sem lehet megsérteni, ezért azokban meg kell adni a `CascadeType.REMOVE` beállítást.
 >
 >>**Vigyázz, a funkció bugos (hybernate-entitymanager 5.6.14.Final)! A `CascadeType.PERSIST` együttes megadása nélkül nem működik.**
 
