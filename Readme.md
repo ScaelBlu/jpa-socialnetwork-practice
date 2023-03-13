@@ -91,14 +91,15 @@ egy *singleton*, azaz csak egyetlen példánya lehet.
 ## Posztok és kommentek (one-to-many)
 
 >Az entitások között kapcsolatokat lehet kialakítani, amelyek egy-, vagy kétirányúak lehetnek. Kétirányú kapcsolatoknál az ún. *owner side* hordozza
-a táblák szintjén a külső kulcsot, ami a másik tábla - az *inverse side* - rekordjára mutat. Úgy is mondhatni, hogy az *inverse side* "leképződik" az
+a táblák szintjén a külső kulcsot, ami a másik tábla - az *inverse side* - rekordjára mutat. Úgy is mondhatni, hogy az *inverse side* "leképeződik" az
 *owner side*-on, amit az annotációk `mappedBy` elemével lehet megadni. Kétirányú *one-to-many* kapcsolat esetén mindig a kollekciót tartalmazó az
-*inverse side*!
+*inverse side*! A `mappedBy` megadása nélkül a kétirányú kapcsolat két külön kapcsolatként jelenik meg, ezért érdemes mindig használni.
 >
->Egyirányú kapcsolatoknál nincs értelme oldaliságról beszélni. Egyirányú *one-to-one* kapcsolatoknál mindkét oldal hordoz a másikra mutató kulcsot.
-Egyirányú *one-to-many* kapcsolatoknál kapcsolótáblán keresztül valósul meg az összeköttetés, míg az egyirányú *many-to-many* kapcsolatoknál két
-kapcsolótábla is létrejön egymást tükrözve. Kétirányú *many-to-many* kapcsolatnál egy kapcsolótábla jön létre, és a `mappedBy` határozza meg, hogy
-melyik oldal kulcsa legyen az első oszlopban, illetve a törlés irányát is (lásd később).
+>Egyirányú kapcsolatok esetén csak az egyik entitás hordoz a másikra mutató referenciát. Egyirányú *one-to-one* kapcsolatban értelemszerűen annak az
+>entitásnak a táblájában lesz a kulcs, amelyik a referenciát tartalmazza. Egyirányú *one-to-many* kapcsolatok esetén kapcsolótáblán keresztül valósul
+>meg az összeköttetés, ha kollekcióban vannak a referenciák - egyébként nem. Az egyirányú *many-to-many* kapcsolatoknál viszont mindig egy kapcsolótáblára
+>van szükség. Kétirányú *many-to-many* kapcsolatnál a `mappedBy` használatával egy kapcsolótábla jön létre, és a `mappedBy` határozza meg, hogy
+melyik oldal felől legyenek a kapcsolatok leképezve (melyik entitás kulcsai legyenek az első oszlopban), továbbá a törlés irányát is (lásd később).
 >
 >*Many-to-many* kapcsolatot egy entitáson belül is létre lehet hozni (lásd később).
 
@@ -206,8 +207,7 @@ Legyen egy egyszerű `List<Group> listAllGroups()` metódus is teszteléshez!
 
 >Amikor egy kétirányú *many-to-many* kapcsolat egyik tagját törölni szeretnéd, akkor fontos az entitás oldalisága. Amikor az *owner side* példányát akarod törölni
 (pl. egy felhasználót), akkor azt nem köti a másik oldal kulcsa. Azonban fordítva ez nem igaz: ha az *inverse side* példányát akarod törölni (pl. egy csoportot),
-akkor előtte fontos, hogy az *owner side*-on megszűnjenek vele a kapcsolatok. Amikor egyirányú *many-to-many* kapcsolatból törölsz, akkor bármelyiket törlöd, fontos,
-hogy előtte a rámutató függőségeket megszüntesd (tehát ha törlöd az egyiket, akkor minden másik kollekciójából el kell azt távolítani).
+akkor előtte fontos, hogy az *owner side*-on megszűnjenek vele a kapcsolatok.
 
 Ha törölni akarnak egy csoportot, az nem járhat együtt a felhasználók törlésével, ezért kaszkádolt törlést ne használj! Írj egy `void deleteGroup(long groupId)`
 metódust, ami törli a csoportot! Csak egy `SELECT` kérés menjen ki, tehát ne használj referenciát! Próbálj meg úgy törölni egy felhasználót is, hogy az egy csoport tagja!
